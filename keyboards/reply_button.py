@@ -43,7 +43,7 @@ def filter_teachers(topic_name: str) -> ReplyKeyboardMarkup:
     teachers = [full_name for (full_name,) in results]
 
     if not teachers:
-        buttons = [[KeyboardButton(text="cad")]]
+        buttons = [[KeyboardButton(text="Ustoz lar yo'q")]]
     else:
         buttons_raw = []
         for teacher in teachers:
