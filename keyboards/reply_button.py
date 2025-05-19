@@ -1,7 +1,8 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 import sqlite3
+from utils.quest import answer_buttons
 
-__all__ = ["reply_kb", "reply_kb_2","filter_teachers"]
+__all__ = ["reply_kb", "reply_kb_2","filter_teachers","reply_kb_3"]
 
 reply_kb = ReplyKeyboardMarkup(
     keyboard=[
@@ -26,6 +27,14 @@ reply_kb_2 = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 conn.close()
+
+buttons = [KeyboardButton(text=answer) for answer in answer_buttons]
+keyboard = [buttons[i:i+2] for i in range(0, len(buttons), 2)]
+
+reply_kb_3 = ReplyKeyboardMarkup(
+    keyboard=keyboard,
+    resize_keyboard=True
+)
 
 def filter_teachers(topic_name: str) -> ReplyKeyboardMarkup:
     conn = sqlite3.connect("data/base.db")
@@ -59,4 +68,6 @@ def filter_teachers(topic_name: str) -> ReplyKeyboardMarkup:
         keyboard=buttons,
         resize_keyboard=True
     )
+
+
 

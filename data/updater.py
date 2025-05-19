@@ -1,8 +1,13 @@
 import requests
 import sqlite3
+import os
+from .config import url_topics, url_teachers
+
+os.remove('base.db') if os.path.exists('base.db') else None
 
 conn = sqlite3.connect('base.db')
 cursor = conn.cursor()
+
 
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS topics (
@@ -23,7 +28,6 @@ cursor.execute("""
 
 conn.commit()
 
-url_topics = "http://127.0.0.1:8000/api/topics/"
 response = requests.get(url=url_topics)
 topics_data = response.json()
 
@@ -37,7 +41,6 @@ for item in topics_data:
 
 conn.commit()
 
-url_teachers = "http://127.0.0.1:8000/api/teachers/"
 response = requests.get(url=url_teachers)
 teachers_data = response.json()
 
