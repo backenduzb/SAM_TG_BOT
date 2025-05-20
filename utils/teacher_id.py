@@ -1,6 +1,9 @@
 import sqlite3
+import os
 
-def get_teacher_id(teacher_name):
+
+def get_teacher_telegram_id(teacher_name):
+
     conn = sqlite3.connect("data/base.db")
     cursor = conn.cursor()
 
@@ -19,6 +22,7 @@ def get_teacher_id(teacher_name):
         return None  
 
 def get_teacher_id(teacher_name):
+
     conn = sqlite3.connect("data/base.db")
     cursor = conn.cursor()
 
@@ -31,7 +35,7 @@ def get_teacher_id(teacher_name):
     result = cursor.fetchone()
     conn.close()
 
-    if result:  
+    if result: 
         return result[0] 
     else:
         return None  

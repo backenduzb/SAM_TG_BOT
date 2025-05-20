@@ -7,3 +7,4 @@ url_teachers = "http://127.0.0.1:8000/api/teachers/"
 
 url_teachers = "http://127.0.0.1:8000/api/teachers/"
 
+url_edit_teacher = "http://localhost:8000/api/teacher-users-stats/"
