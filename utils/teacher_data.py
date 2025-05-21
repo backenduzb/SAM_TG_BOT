@@ -15,4 +15,4 @@ async def get_teacher_status(teacher_id):
     yomon = status_data.get("umuman_qoniqaman")
 
     if status_data:
-        return f"<b>Sizga yangi status belgilandi!</b>\n<pre> Juda yaxshi - {juda_yaxshi} \n Yaxshi - {yaxshi} \n O'rtacha - {ortacha} Past - {past} \n Yomon {yomon}</pre>"
+        return f"<b>⭐️ Sizga yangi status belgilandi!</b>\n<pre> Juda yaxshi - {juda_yaxshi} \n Yaxshi - {yaxshi} \n O'rtacha - {ortacha} \n Past - {past} \n Yomon {yomon}</pre>"

@@ -17,10 +17,13 @@ router = Router()
 
 @router.message(Command("start"))
 async def cmd_start(message: Message):
+    
     global total_answer
     answered_questions[message.from_user.username] = ""
     answered_questions[str(message.from_user.id)] = 0
-    total_answer = "<b>Sizning javoblaringiz.</b> \n <pre>"
+    answered_questions[f"{message.from_user.username}_kafedra"] = ""
+
+    total_answer = "<b>📑 Sizning javoblaringiz.</b> \n\n"
     await message.react([types.ReactionTypeEmoji(emoji='👍')])
     await message.answer(f"<b>Assalomu alaykum, <code>{message.from_user.full_name}</code>!</b>",reply_markup=reply_kb,parse_mode="html")
 
@@ -30,18 +33,26 @@ async def handle_message(message: Message):
 
 @router.message(F.text.startswith("🏢"))
 async def kofedra(message: Message):
+    global total_answer
+    answered_questions[f"{message.from_user.username}_kafedra"] = str(message.text).replace("🏢","").strip()
+    total_answer += f"<code>{answered_questions[f'{message.from_user.username}_kafedra']}</code> - kafedra.\n"
     topic_name = message.text[2:].strip()
     reply_kb_3 = filter_teachers(topic_name)
-    await message.answer("<b>Ustozni tanlang!</b>",reply_markup=reply_kb_3,parse_mode="html")
+    await message.answer(" <b>Ustozni tanlang!</b>",reply_markup=reply_kb_3,parse_mode="html")
 
 @router.message(F.text.startswith("👩‍🏫") | F.text.startswith("👨‍🏫"))
 async def status(message: Message):
 
-    answered_questions[message.from_user.username] = str(message.text).replace("👩‍🏫","").replace("👨‍🏫","")
+    global total_answer
+
+
+    answered_questions[message.from_user.username] = str(message.text).replace("👩‍🏫","").replace("👨‍🏫","").strip()
+
+    total_answer += f"<code>{answered_questions[message.from_user.username]}</code> - o'qituvchi. \n\n<pre>"
 
     answered_questions[str(message.from_user.id)] += 1
 
-    await message.answer(queastions[answered_questions[str(message.from_user.id)]-1],reply_markup=reply_kb_3)
+    await message.answer(f"<b>{queastions[answered_questions[str(message.from_user.id)]-1]}</b>",parse_mode="html",reply_markup=reply_kb_3)
 
 
 @router.message(F.text.in_(["Yaxshi", "Past", "O'rtacha", "Juda yaxshi", "Yomon"]))
@@ -51,11 +62,14 @@ async def its_user_answer(message: Message):
     text = message.text
 
     if answered_questions[str(message.from_user.id)] <= 6:
+
+        await message.react([types.ReactionTypeEmoji(emoji='👌')])
         teacher_name = answered_questions[message.from_user.username].strip()
         teacher_id = get_teacher_id(answered_questions[message.from_user.username])
 
         edited_url = f"{url_edit_teacher}{teacher_id}/"
         print(edited_url)
+        
         total_answer += f"{answered_questions[str(message.from_user.id)]}. {text} \n"
 
         try:
@@ -93,15 +107,19 @@ async def its_user_answer(message: Message):
             await message.answer(f"Xato: Server bilan bog'lanishda xato: {e}")
             return
 
-        await message.answer(queastions[answered_questions[str(message.from_user.id)]-1], reply_markup=reply_kb_3)
+        await message.answer(f"<b>{queastions[answered_questions[str(message.from_user.id)]-1]}</b>",parse_mode="html",reply_markup=reply_kb_3)
 
         answered_questions[str(message.from_user.id)] += 1
     elif answered_questions[str(message.from_user.id)] == 7:
+
+        await message.react([types.ReactionTypeEmoji(emoji='⚡️')])
+
         teacher_name = answered_questions[message.from_user.username].strip()
         teacher_telegram_id = get_teacher_telegram_id(teacher_name)
 
         teacher_id = get_teacher_id(answered_questions[message.from_user.username])
         total_answer += "</pre>"
+
         await message.answer(total_answer, parse_mode="html")
 
         if teacher_telegram_id:
